@@ -29,27 +29,11 @@ void PaintLabel::paintEvent(QPaintEvent *ev)
     if (!image.isNull())
     {
 
-  /*      int width = image.width() * zoomFactor;
-        int height = image.height() * zoomFactor;
-        if (zoomFactor <= 0) {
-            QSize imgSize = image.size();
-            imgSize.scale(this->width(), this->height(), Qt::KeepAspectRatio);
-            width = imgSize.width();
-            height = imgSize.height();
-        }
-*/
         int width = this->width();
         int height = this->height();
         qreal posX = 0.0; 
         qreal posY = 0.0;
 
-        // Alignment draw
-/*        if (this->alignment() & Qt::AlignCenter)
-        {
-            posX = this->width() / 2 - image.width() / 2;
-            posY = this->height() / 2 - image.height() / 2;
-        }
-*/
         QRectF target(posX, posY, width, height);
 
         // draw the image
@@ -62,9 +46,9 @@ void PaintLabel::paintEvent(QPaintEvent *ev)
             QListWidgetItem * ellipse;
             double hFactor = (double) height / (double) image.height();
             double wFactor = (double) width / (double) image.width();
+            
             for (int i = 0; i < elList->count(); i++) {
                 ellipse = elList->item(i);
-                
                 QRectF elRect = ellipse->data(Qt::UserRole + 1).toRectF();
                 elRect.setRect(
                         elRect.x() * wFactor,

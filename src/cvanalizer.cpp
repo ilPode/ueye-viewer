@@ -88,7 +88,11 @@ void CvAnalizer :: findShapes (sDetectionOptions opts) {
 
     if ((opts.shape & SHAPE_CIRCLE) != 0) {
         //cvClearMemStorage(cv_memCircles);
+        cvSaveImage("image_original.png", cv_image); 
         cvSmooth(cv_image, cv_image, CV_GAUSSIAN, 5, 5 );
+        cvSaveImage("image_smooth.png", cv_image); 
+        cvThreshold(cv_image, cv_image, THRESHOLD_VALUE, THRESHOLD_MAX, CV_THRESH_BINARY_INV);
+        cvSaveImage("image_thresh.png", cv_image); 
         cv_seqCircles = cvHoughCircles(
                 cv_image,
                 cv_memCircles, 
@@ -100,6 +104,12 @@ void CvAnalizer :: findShapes (sDetectionOptions opts) {
                 opts.minRad * (cv_image->width > cv_image->height ? cv_image->height : cv_image->width), // Min radius
                 opts.maxRad * (cv_image->width > cv_image->height ? cv_image->height : cv_image->width) // Max radius
                 );
+        for( int i = 0; i < cv_seqCircles->total; i++ ) {
+            float* p = (float*) cvGetSeqElem(cv_seqCircles, i);
+            CvPoint pt = cvPoint(cvRound(p[0]), cvRound(p[1]));
+            cvCircle(cv_image, pt, cvRound(p[2]), CV_RGB(0x88,0x88,0x88));
+        }
+        cvSaveImage("image_final.png", cv_image); 
     }
 }
 

@@ -8,13 +8,17 @@
 #ifndef CVANALIZER_H
 #define CVANALIZER_H
 
-#include <opencv2/opencv.hpp>
+#include <opencv/cv.h>
+#include <opencv/highgui.h>
 #include <QImage>
 #include <QRect>
 #include <QtDebug>
 
 #define DEFAULT_MAX_WIDTH 800
 #define DEFAULT_MAX_HEIGHT 800
+
+#define THRESHOLD_VALUE 150
+#define THRESHOLD_MAX 255
 
 /* Enum of shape types for detection */
 

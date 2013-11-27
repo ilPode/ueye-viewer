@@ -41,7 +41,8 @@ DEFINES += __LINUX__ \
     __cplusplus
 LIBS += -lueye_api \
         -lopencv_core \
-        -lopencv_imgproc
+        -lopencv_imgproc \
+        -lopencv_highgui
 INCLUDEPATH += include \
     . \
     src
