@@ -1,0 +1,1017 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainviewClass</class>
+ <widget class="QMainWindow" name="MainviewClass">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>792</width>
+    <height>619</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>uEye Viewer</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../mainview.qrc">
+    <normaloff>:/images/uEye.png</normaloff>:/images/uEye.png</iconset>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="toolButtonStyle">
+   <enum>Qt::ToolButtonIconOnly</enum>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>792</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <widget class="QMenu" name="menuLoad_parameter">
+     <property name="title">
+      <string>Load parameter</string>
+     </property>
+     <addaction name="actionLoadParamsFromFile"/>
+     <addaction name="actionLoadParameterSet"/>
+    </widget>
+    <widget class="QMenu" name="menuSave_parameter">
+     <property name="title">
+      <string>Save parameter</string>
+     </property>
+     <addaction name="actionSaveParameterToFile"/>
+     <addaction name="actionSaveParameterSet"/>
+    </widget>
+    <addaction name="menuLoad_parameter"/>
+    <addaction name="menuSave_parameter"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_image"/>
+    <addaction name="actionLoad_image"/>
+    <addaction name="actionLoad_image_cam"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuUEye">
+    <property name="title">
+     <string>Camera</string>
+    </property>
+    <addaction name="actionOpenCamera"/>
+    <addaction name="actionOpenCameraStop"/>
+    <addaction name="actionCloseCamera"/>
+    <addaction name="actionResetCamera"/>
+    <addaction name="actionForceCameralist"/>
+    <addaction name="separator"/>
+    <addaction name="actionSnapshot"/>
+    <addaction name="actionLive"/>
+    <addaction name="actionTrigger"/>
+    <addaction name="separator"/>
+    <addaction name="actionUseErrorReport"/>
+    <addaction name="actionProperties"/>
+   </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>?</string>
+    </property>
+    <addaction name="actionAbout"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionDisplay"/>
+    <addaction name="separator"/>
+    <addaction name="actionView_fit"/>
+    <addaction name="actionOriginal_size"/>
+    <addaction name="actionZoom_out"/>
+    <addaction name="actionZoom_in"/>
+    <addaction name="separator"/>
+    <addaction name="actionLimitDisplayRate"/>
+    <addaction name="separator"/>
+    <addaction name="actionImageinfo"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menuUEye"/>
+   <addaction name="menuView"/>
+   <addaction name="menu"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::LeftToolBarArea|Qt::RightToolBarArea</set>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionOpenCamera"/>
+   <addaction name="actionOpenCameraStop"/>
+   <addaction name="actionCloseCamera"/>
+   <addaction name="separator"/>
+   <addaction name="actionSnapshot"/>
+   <addaction name="actionLive"/>
+   <addaction name="separator"/>
+   <addaction name="actionSave_image"/>
+   <addaction name="actionLoad_image_cam"/>
+   <addaction name="actionLoad_image"/>
+   <addaction name="actionProperties"/>
+   <addaction name="actionImageinfo"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar_display">
+   <property name="windowTitle">
+    <string>toolBar_2</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionDisplay"/>
+   <addaction name="actionView_fit"/>
+   <addaction name="actionOriginal_size"/>
+   <addaction name="actionZoom_out"/>
+   <addaction name="actionZoom_in"/>
+   <addaction name="separator"/>
+   <addaction name="actionLimitDisplayRate"/>
+   <addaction name="separator"/>
+  </widget>
+  <widget class="QDockWidget" name="dockDetect">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::RightDockWidgetArea</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QGroupBox" name="gboxDockSettings">
+       <property name="title">
+        <string>Settings</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLabel" name="labelMinRad">
+            <property name="text">
+             <string>Min Radius:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSlider" name="sliderMinRad">
+            <property name="minimum">
+             <number>0</number>
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="value">
+             <number>0</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="spinMinRad">
+            <property name="suffix">
+             <string>%</string>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="singleStep">
+             <number>1</number>
+            </property>
+            <property name="value">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QLabel" name="labelMaxRad">
+            <property name="text">
+             <string>Max Radius:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSlider" name="sliderMaxRad">
+            <property name="minimum">
+             <number>0</number>
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="singleStep">
+             <number>1</number>
+            </property>
+            <property name="value">
+             <number>100</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="spinMaxRad">
+            <property name="wrapping">
+             <bool>false</bool>
+            </property>
+            <property name="suffix">
+             <string>%</string>
+            </property>
+            <property name="minimum">
+             <number>0</number>
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="singleStep">
+             <number>1</number>
+            </property>
+            <property name="value">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QLabel" name="labelRefresh">
+            <property name="text">
+             <string>Refresh rate:</string>
+            </property>
+            <property name="buddy">
+             <cstring>spinRefresh</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="spinRefresh">
+            <property name="suffix">
+             <string>ms</string>
+            </property>
+            <property name="maximum">
+             <number>10000</number>
+            </property>
+            <property name="value">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="cboxAdvanced">
+       <property name="text">
+        <string>Show advanced settings</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="gboxAdvanced">
+       <property name="title">
+        <string>Advanced settings</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_9">
+          <item>
+           <widget class="QLabel" name="labelMinDist">
+            <property name="text">
+             <string>Minimum distance:</string>
+            </property>
+            <property name="buddy">
+             <cstring>sliderMinRad</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_8">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="spinMinDist">
+            <property name="suffix">
+             <string>px</string>
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="value">
+             <number>5</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QLabel" name="labelCannyTh">
+            <property name="text">
+             <string>Canny threshold:</string>
+            </property>
+            <property name="buddy">
+             <cstring>sliderMinRad</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="spinCannyTh">
+            <property name="suffix">
+             <string>px</string>
+            </property>
+            <property name="maximum">
+             <number>1000</number>
+            </property>
+            <property name="value">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
+          <item>
+           <widget class="QLabel" name="labelAccTh">
+            <property name="text">
+             <string>Accumulator threshold:</string>
+            </property>
+            <property name="buddy">
+             <cstring>sliderMinRad</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_6">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="spinAccTh">
+            <property name="suffix">
+             <string>px</string>
+            </property>
+            <property name="maximum">
+             <number>1000</number>
+            </property>
+            <property name="singleStep">
+             <number>1</number>
+            </property>
+            <property name="value">
+             <number>300</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <item>
+           <widget class="QLabel" name="labelAccDim">
+            <property name="text">
+             <string>Accumulator Factor:</string>
+            </property>
+            <property name="buddy">
+             <cstring>sliderMinRad</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="spinAccDim">
+            <property name="maximum">
+             <number>10</number>
+            </property>
+            <property name="value">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>149</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QListWidget" name="listEllipses"/>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="cboxShow">
+       <property name="text">
+        <string>Show</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnDetect">
+         <property name="text">
+          <string>Find</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <action name="actionOpenCamera">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/camera-play.png</normaloff>:/icons/camera-play.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open camera live</string>
+   </property>
+   <property name="toolTip">
+    <string>open a uEye and start live</string>
+   </property>
+   <property name="statusTip">
+    <string>open a uEye</string>
+   </property>
+  </action>
+  <action name="actionCloseCamera">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/camera-close.png</normaloff>:/icons/camera-close.png</iconset>
+   </property>
+   <property name="text">
+    <string>Close camera</string>
+   </property>
+   <property name="toolTip">
+    <string>close a uEye</string>
+   </property>
+   <property name="statusTip">
+    <string>close a uEye</string>
+   </property>
+  </action>
+  <action name="actionSave_image">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save image</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/about.png</normaloff>:/icons/about.png</iconset>
+   </property>
+   <property name="text">
+    <string>About</string>
+   </property>
+   <property name="toolTip">
+    <string>about uEye Viewer</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/exit.png</normaloff>:/icons/exit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="toolTip">
+    <string>close the demo</string>
+   </property>
+   <property name="statusTip">
+    <string>close the demo</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Q</string>
+   </property>
+  </action>
+  <action name="actionSnapshot">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/media-pause.png</normaloff>:/icons/media-pause.png</iconset>
+   </property>
+   <property name="text">
+    <string>Snapshot</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+S</string>
+   </property>
+  </action>
+  <action name="actionLive">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/media-play.png</normaloff>:/icons/media-play.png</iconset>
+   </property>
+   <property name="text">
+    <string>Start live</string>
+   </property>
+   <property name="toolTip">
+    <string>Start/Stop live capture</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+L</string>
+   </property>
+  </action>
+  <action name="actionMonochrome">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>monochrome</string>
+   </property>
+  </action>
+  <action name="actionColor">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>color</string>
+   </property>
+  </action>
+  <action name="actionDisplay">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/no-display.png</normaloff>:/icons/no-display.png</iconset>
+   </property>
+   <property name="text">
+    <string>No display</string>
+   </property>
+   <property name="toolTip">
+    <string>No display</string>
+   </property>
+  </action>
+  <action name="actionProperties">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/properties.png</normaloff>:/icons/properties.png</iconset>
+   </property>
+   <property name="text">
+    <string>Properties</string>
+   </property>
+  </action>
+  <action name="actionView_fit">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/zoom-fit.png</normaloff>:/icons/zoom-fit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Fit to window</string>
+   </property>
+   <property name="toolTip">
+    <string>Fit to window</string>
+   </property>
+  </action>
+  <action name="actionTrigger">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Use HW trigger</string>
+   </property>
+  </action>
+  <action name="actionOriginal_size">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/zoom-original.png</normaloff>:/icons/zoom-original.png</iconset>
+   </property>
+   <property name="text">
+    <string>Original size</string>
+   </property>
+   <property name="toolTip">
+    <string>Original size</string>
+   </property>
+  </action>
+  <action name="actionZoom_out">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/zoom-out.png</normaloff>:/icons/zoom-out.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom out</string>
+   </property>
+  </action>
+  <action name="actionZoom_in">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/zoom-in.png</normaloff>:/icons/zoom-in.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom in</string>
+   </property>
+   <property name="toolTip">
+    <string>zoom in</string>
+   </property>
+  </action>
+  <action name="actionForceCameralist">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Force cameralist</string>
+   </property>
+  </action>
+  <action name="actionUseErrorReport">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Use API error report</string>
+   </property>
+   <property name="toolTip">
+    <string>api error report</string>
+   </property>
+  </action>
+  <action name="actionImageinfo">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/camera-info.png</normaloff>:/icons/camera-info.png</iconset>
+   </property>
+   <property name="text">
+    <string>Image info</string>
+   </property>
+   <property name="toolTip">
+    <string>show/hide additional image infos</string>
+   </property>
+  </action>
+  <action name="actionOpenCameraStop">
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/camera-stop.png</normaloff>:/icons/camera-stop.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open camera stop</string>
+   </property>
+   <property name="toolTip">
+    <string>open a uEye stopped</string>
+   </property>
+  </action>
+  <action name="actionLimitDisplayRate">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/rate-limit.png</normaloff>:/icons/rate-limit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Limit display rate</string>
+   </property>
+   <property name="toolTip">
+    <string>Limit display rate</string>
+   </property>
+  </action>
+  <action name="actionResetCamera">
+   <property name="text">
+    <string>Reset to defaults</string>
+   </property>
+   <property name="toolTip">
+    <string>resets the camera to its default parameters</string>
+   </property>
+  </action>
+  <action name="actionLoadParamsFromFile">
+   <property name="text">
+    <string>from file...</string>
+   </property>
+   <property name="toolTip">
+    <string>load camera parameter from a configuration file</string>
+   </property>
+  </action>
+  <action name="actionLoadParameterSet">
+   <property name="text">
+    <string>Parameter set</string>
+   </property>
+   <property name="toolTip">
+    <string>load camera parameter from camera set 1</string>
+   </property>
+  </action>
+  <action name="actionLoadParameterSet2">
+   <property name="text">
+    <string>Parameter set 2</string>
+   </property>
+   <property name="toolTip">
+    <string>load camera parameter from camera set 2</string>
+   </property>
+  </action>
+  <action name="actionSaveParameterToFile">
+   <property name="text">
+    <string>to file...</string>
+   </property>
+   <property name="toolTip">
+    <string>save camera parameter to camera configuration file</string>
+   </property>
+  </action>
+  <action name="actionSaveParameterSet">
+   <property name="text">
+    <string>Parameter set</string>
+   </property>
+   <property name="toolTip">
+    <string>save camera parameter to camera set 1</string>
+   </property>
+  </action>
+  <action name="actionSaveParameterSet2">
+   <property name="text">
+    <string>Parameter set 2</string>
+   </property>
+   <property name="toolTip">
+    <string>save camera parameter to camera set 2</string>
+   </property>
+  </action>
+  <action name="actionLoad_image_cam">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/camera-load.png</normaloff>:/icons/camera-load.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load image on camera</string>
+   </property>
+   <property name="toolTip">
+    <string>Load image on camera</string>
+   </property>
+  </action>
+  <action name="actionLoad_image">
+   <property name="icon">
+    <iconset resource="../mainview.qrc">
+     <normaloff>:/icons/image-load.png</normaloff>:/icons/image-load.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load image</string>
+   </property>
+   <property name="toolTip">
+    <string>Load image without loading on the camera</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../mainview.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>spinMinRad</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>sliderMinRad</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>772</x>
+     <y>151</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>701</x>
+     <y>148</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sliderMinRad</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinMinRad</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>701</x>
+     <y>148</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>772</x>
+     <y>151</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sliderMaxRad</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinMaxRad</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>701</x>
+     <y>183</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>772</x>
+     <y>186</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinMaxRad</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>sliderMaxRad</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>772</x>
+     <y>186</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>701</x>
+     <y>183</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cboxAdvanced</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>gboxAdvanced</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>782</x>
+     <y>261</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>640</x>
+     <y>278</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

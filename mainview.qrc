@@ -1,0 +1,27 @@
+<RCC>
+  <qresource>
+    <file>icons/about.png</file>
+    <file>icons/camera-close.png</file>
+    <file>icons/camera-info.png</file>
+    <file>icons/camera-load.png</file>
+    <file>icons/camera-pause.png</file>
+    <file>icons/camera-play.png</file>
+    <file>icons/camera-stop.png</file>
+    <file>icons/exit.png</file>
+    <file>icons/media-pause.png</file>
+    <file>icons/media-play.png</file>
+    <file>icons/media-stop.png</file>
+    <file>icons/no-display.png</file>
+    <file>icons/properties.png</file>
+    <file>icons/rate-limit.png</file>
+    <file>icons/save.png</file>
+    <file>icons/zoom-fit.png</file>
+    <file>icons/zoom-in.png</file>
+    <file>icons/zoom-original.png</file>
+    <file>icons/zoom-out.png</file>
+    <file>icons/image-load.png</file>
+    <file>icons/find-shapes.png</file>
+    <file>images/femto_logo_bg.png</file>
+    <file>images/uEye.png</file>
+  </qresource>
+</RCC>
