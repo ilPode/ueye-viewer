@@ -9,15 +9,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>792</width>
-    <height>619</height>
+    <width>756</width>
+    <height>684</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>uEye Viewer</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../mainview.qrc">
+   <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
     <normaloff>:/images/uEye.png</normaloff>:/images/uEye.png</iconset>
   </property>
   <property name="autoFillBackground">
@@ -32,7 +32,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>792</width>
+     <width>756</width>
      <height>25</height>
     </rect>
    </property>
@@ -169,329 +169,388 @@
    <widget class="QWidget" name="dockWidgetContents">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QGroupBox" name="gboxDockSettings">
-       <property name="title">
-        <string>Settings</string>
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="currentIndex">
+        <number>0</number>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <item>
-           <widget class="QLabel" name="labelMinRad">
-            <property name="text">
-             <string>Min Radius:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSlider" name="sliderMinRad">
-            <property name="minimum">
-             <number>0</number>
-            </property>
-            <property name="maximum">
-             <number>100</number>
-            </property>
-            <property name="value">
-             <number>0</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="spinMinRad">
-            <property name="suffix">
-             <string>%</string>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>100</number>
-            </property>
-            <property name="singleStep">
-             <number>1</number>
-            </property>
-            <property name="value">
-             <number>1</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
-          <item>
-           <widget class="QLabel" name="labelMaxRad">
-            <property name="text">
-             <string>Max Radius:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSlider" name="sliderMaxRad">
-            <property name="minimum">
-             <number>0</number>
-            </property>
-            <property name="maximum">
-             <number>100</number>
-            </property>
-            <property name="singleStep">
-             <number>1</number>
-            </property>
-            <property name="value">
-             <number>100</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="spinMaxRad">
-            <property name="wrapping">
-             <bool>false</bool>
-            </property>
-            <property name="suffix">
-             <string>%</string>
-            </property>
-            <property name="minimum">
-             <number>0</number>
-            </property>
-            <property name="maximum">
-             <number>100</number>
-            </property>
-            <property name="singleStep">
-             <number>1</number>
-            </property>
-            <property name="value">
-             <number>100</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <item>
-           <widget class="QLabel" name="labelRefresh">
-            <property name="text">
-             <string>Refresh rate:</string>
-            </property>
-            <property name="buddy">
-             <cstring>spinRefresh</cstring>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="spinRefresh">
-            <property name="suffix">
-             <string>ms</string>
-            </property>
-            <property name="maximum">
-             <number>10000</number>
-            </property>
-            <property name="value">
-             <number>100</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="cboxAdvanced">
-       <property name="text">
-        <string>Show advanced settings</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QGroupBox" name="gboxAdvanced">
-       <property name="title">
-        <string>Advanced settings</string>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_9">
-          <item>
-           <widget class="QLabel" name="labelMinDist">
-            <property name="text">
-             <string>Minimum distance:</string>
-            </property>
-            <property name="buddy">
-             <cstring>sliderMinRad</cstring>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_8">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="spinMinDist">
-            <property name="suffix">
-             <string>px</string>
-            </property>
-            <property name="maximum">
-             <number>100</number>
-            </property>
-            <property name="value">
-             <number>5</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_5">
-          <item>
-           <widget class="QLabel" name="labelCannyTh">
-            <property name="text">
-             <string>Canny threshold:</string>
-            </property>
-            <property name="buddy">
-             <cstring>sliderMinRad</cstring>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="spinCannyTh">
-            <property name="suffix">
-             <string>px</string>
-            </property>
-            <property name="maximum">
-             <number>1000</number>
-            </property>
-            <property name="value">
-             <number>100</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_7">
-          <item>
-           <widget class="QLabel" name="labelAccTh">
-            <property name="text">
-             <string>Accumulator threshold:</string>
-            </property>
-            <property name="buddy">
-             <cstring>sliderMinRad</cstring>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_6">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="spinAccTh">
-            <property name="suffix">
-             <string>px</string>
-            </property>
-            <property name="maximum">
-             <number>1000</number>
-            </property>
-            <property name="singleStep">
-             <number>1</number>
-            </property>
-            <property name="value">
-             <number>300</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_8">
-          <item>
-           <widget class="QLabel" name="labelAccDim">
-            <property name="text">
-             <string>Accumulator Factor:</string>
-            </property>
-            <property name="buddy">
-             <cstring>sliderMinRad</cstring>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_7">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="spinAccDim">
-            <property name="maximum">
-             <number>10</number>
-            </property>
-            <property name="value">
-             <number>1</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
+       <widget class="QWidget" name="tabBasic">
+        <attribute name="title">
+         <string>Settings</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QLabel" name="labelRefresh">
+             <property name="text">
+              <string>Refresh rate:</string>
+             </property>
+             <property name="buddy">
+              <cstring>spinRefresh</cstring>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="spinRefresh">
+             <property name="suffix">
+              <string>ms</string>
+             </property>
+             <property name="maximum">
+              <number>10000</number>
+             </property>
+             <property name="value">
+              <number>100</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QLabel" name="labelMaxRad">
+             <property name="text">
+              <string>Max radius:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <item>
+              <widget class="QSlider" name="sliderMaxRad">
+               <property name="minimum">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <number>999</number>
+               </property>
+               <property name="singleStep">
+                <number>1</number>
+               </property>
+               <property name="value">
+                <number>999</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelMaxRadScale">
+               <property name="text">
+                <string>-</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="labelMinRad">
+             <property name="text">
+              <string>Min radius:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_6">
+             <item>
+              <widget class="QSlider" name="sliderMinRad">
+               <property name="minimum">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <number>999</number>
+               </property>
+               <property name="value">
+                <number>0</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelMinRadScale">
+               <property name="text">
+                <string>-</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_10">
+           <item>
+            <widget class="QLabel" name="labelPixDim">
+             <property name="text">
+              <string>Pixel dimension:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="spinPixDim">
+             <property name="maximum">
+              <double>999.990000000000009</double>
+             </property>
+             <property name="value">
+              <double>1.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="comboPixDim">
+             <property name="currentIndex">
+              <number>1</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>mm</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>µm</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>nm</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tabAdvanced">
+        <attribute name="title">
+         <string>Advanced Settings</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_9">
+           <item>
+            <widget class="QLabel" name="labelMinDist">
+             <property name="text">
+              <string>Minimum distance:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <item>
+              <widget class="QSlider" name="sliderMinDistScale">
+               <property name="value">
+                <number>20</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelMinDistScale">
+               <property name="text">
+                <string>-</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QLabel" name="labelCannyTh">
+             <property name="text">
+              <string>Canny threshold:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="spinCannyTh">
+             <property name="suffix">
+              <string/>
+             </property>
+             <property name="maximum">
+              <number>1000</number>
+             </property>
+             <property name="value">
+              <number>200</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <item>
+            <widget class="QLabel" name="labelAccTh">
+             <property name="text">
+              <string>Accumulator threshold:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_6">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="spinAccTh">
+             <property name="suffix">
+              <string/>
+             </property>
+             <property name="maximum">
+              <number>1000</number>
+             </property>
+             <property name="singleStep">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <number>100</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <item>
+            <widget class="QLabel" name="labelAccDim">
+             <property name="text">
+              <string>Accumulator Factor:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_7">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="spinAccDim">
+             <property name="maximum">
+              <number>10</number>
+             </property>
+             <property name="value">
+              <number>2</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QCheckBox" name="cboxGaussian">
+             <property name="text">
+              <string>Gaussian blur</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="spinGaussian">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="suffix">
+              <string>px</string>
+             </property>
+             <property name="value">
+              <number>5</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </item>
      <item>
@@ -508,7 +567,31 @@
       </spacer>
      </item>
      <item>
-      <widget class="QListWidget" name="listEllipses"/>
+      <widget class="QTabWidget" name="tabWidget_2">
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="tabCList">
+        <attribute name="title">
+         <string>Circles</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_8">
+         <item>
+          <widget class="QListWidget" name="listEllipses"/>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tabCDist">
+        <attribute name="title">
+         <string>Distances between centers</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_7">
+         <item>
+          <widget class="QListWidget" name="listDist"/>
+         </item>
+        </layout>
+       </widget>
+      </widget>
      </item>
      <item>
       <widget class="QCheckBox" name="cboxShow">
@@ -537,6 +620,9 @@
        </item>
        <item>
         <widget class="QPushButton" name="btnDetect">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Find</string>
          </property>
@@ -550,12 +636,73 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="dockMeasure">
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QHBoxLayout" name="horizontalLayout_12">
+     <item>
+      <widget class="QGroupBox" name="gboxMeasure">
+       <property name="title">
+        <string>Ruler</string>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_11">
+        <item>
+         <widget class="QLabel" name="labelLength">
+          <property name="text">
+           <string>Length:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="labelMeasure">
+          <property name="text">
+           <string>-</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_8">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>240</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnDrawLine">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Draw</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionOpenCamera">
    <property name="enabled">
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/camera-play.png</normaloff>:/icons/camera-play.png</iconset>
    </property>
    <property name="text">
@@ -573,7 +720,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/camera-close.png</normaloff>:/icons/camera-close.png</iconset>
    </property>
    <property name="text">
@@ -591,7 +738,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
    </property>
    <property name="text">
@@ -600,7 +747,7 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/about.png</normaloff>:/icons/about.png</iconset>
    </property>
    <property name="text">
@@ -612,7 +759,7 @@
   </action>
   <action name="actionExit">
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/exit.png</normaloff>:/icons/exit.png</iconset>
    </property>
    <property name="text">
@@ -633,7 +780,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/media-pause.png</normaloff>:/icons/media-pause.png</iconset>
    </property>
    <property name="text">
@@ -651,7 +798,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/media-play.png</normaloff>:/icons/media-play.png</iconset>
    </property>
    <property name="text">
@@ -688,7 +835,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/no-display.png</normaloff>:/icons/no-display.png</iconset>
    </property>
    <property name="text">
@@ -703,7 +850,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/properties.png</normaloff>:/icons/properties.png</iconset>
    </property>
    <property name="text">
@@ -721,7 +868,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/zoom-fit.png</normaloff>:/icons/zoom-fit.png</iconset>
    </property>
    <property name="text">
@@ -744,7 +891,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/zoom-original.png</normaloff>:/icons/zoom-original.png</iconset>
    </property>
    <property name="text">
@@ -759,7 +906,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/zoom-out.png</normaloff>:/icons/zoom-out.png</iconset>
    </property>
    <property name="text">
@@ -771,7 +918,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/zoom-in.png</normaloff>:/icons/zoom-in.png</iconset>
    </property>
    <property name="text">
@@ -805,7 +952,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/camera-info.png</normaloff>:/icons/camera-info.png</iconset>
    </property>
    <property name="text">
@@ -817,7 +964,7 @@
   </action>
   <action name="actionOpenCameraStop">
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/camera-stop.png</normaloff>:/icons/camera-stop.png</iconset>
    </property>
    <property name="text">
@@ -835,7 +982,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/rate-limit.png</normaloff>:/icons/rate-limit.png</iconset>
    </property>
    <property name="text">
@@ -906,7 +1053,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/camera-load.png</normaloff>:/icons/camera-load.png</iconset>
    </property>
    <property name="text">
@@ -918,7 +1065,7 @@
   </action>
   <action name="actionLoad_image">
    <property name="icon">
-    <iconset resource="../mainview.qrc">
+    <iconset resource="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc">
      <normaloff>:/icons/image-load.png</normaloff>:/icons/image-load.png</iconset>
    </property>
    <property name="text">
@@ -930,86 +1077,22 @@
   </action>
  </widget>
  <resources>
-  <include location="../mainview.qrc"/>
+  <include location="../../../../programmi/C++/Qt/ueyeviewer/mainview.qrc"/>
  </resources>
  <connections>
   <connection>
-   <sender>spinMinRad</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>sliderMinRad</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>772</x>
-     <y>151</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>701</x>
-     <y>148</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>sliderMinRad</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinMinRad</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>701</x>
-     <y>148</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>772</x>
-     <y>151</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>sliderMaxRad</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinMaxRad</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>701</x>
-     <y>183</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>772</x>
-     <y>186</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinMaxRad</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>sliderMaxRad</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>772</x>
-     <y>186</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>701</x>
-     <y>183</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cboxAdvanced</sender>
+   <sender>cboxGaussian</sender>
    <signal>toggled(bool)</signal>
-   <receiver>gboxAdvanced</receiver>
-   <slot>setVisible(bool)</slot>
+   <receiver>spinGaussian</receiver>
+   <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>782</x>
-     <y>261</y>
+     <x>538</x>
+     <y>294</y>
     </hint>
     <hint type="destinationlabel">
-     <x>640</x>
-     <y>278</y>
+     <x>719</x>
+     <y>290</y>
     </hint>
    </hints>
   </connection>

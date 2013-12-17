@@ -11,6 +11,11 @@
 PaintLabel::PaintLabel(QWidget *parent) : QLabel(parent) {
     zoomFactor = 1.0;
     fitWindow = false;
+    shapesDetected = false;
+    drawShapes = true;
+    drawLine = false;
+    p1 = QPointF();
+    p2 = QPointF();
 }
 
 void PaintLabel::setPixmap(const QPixmap &pixmap)
@@ -18,6 +23,7 @@ void PaintLabel::setPixmap(const QPixmap &pixmap)
     // we also can draw a pixmap
     // conversion is slow
     image = pixmap.toImage();
+    shapesDetected = false;
 
     adjustSize();
 }
@@ -39,13 +45,57 @@ void PaintLabel::paintEvent(QPaintEvent *ev)
         // draw the image
         QPainter painter(this);
         painter.drawImage(target, image);
+        double hFactor = (double) height / (double) image.height();
+        double wFactor = (double) width / (double) image.width();
+
+        // draw line
+        if (drawLine) {
+            QPen pen(Qt::cyan);
+            pen.setWidth(2);
+            painter.setPen(pen);
+
+            if (!p1.isNull()) {
+                painter.drawLine(
+                        p1.x() * wFactor - 5, 
+                        p1.y() * hFactor, 
+                        p1.x() * wFactor + 5, 
+                        p1.y() * hFactor 
+                        );
+                painter.drawLine(
+                        p1.x() * wFactor,
+                        p1.y() * hFactor - 5,
+                        p1.x() * wFactor,
+                        p1.y() * hFactor + 5
+                        );
+            }
+            if (!p2.isNull()) {
+                painter.drawLine(
+                        p2.x() * wFactor - 5, 
+                        p2.y() * hFactor, 
+                        p2.x() * wFactor + 5, 
+                        p2.y() * hFactor 
+                        );
+                painter.drawLine(
+                        p2.x() * wFactor,
+                        p2.y() * hFactor - 5,
+                        p2.x() * wFactor,
+                        p2.y() * hFactor + 5
+                        );
+            }
+            if (!p1.isNull() && !p2.isNull()) {
+                painter.drawLine(
+                        p1.x() * wFactor,
+                        p1.y() * hFactor,
+                        p2.x() * wFactor,
+                        p2.y() * hFactor
+                        );   
+            }
+        }
         
         // draw detected shapes
-        if (drawShapes) {
+        if (drawShapes && shapesDetected) {
             painter.setBrush(Qt::NoBrush);
             QListWidgetItem * ellipse;
-            double hFactor = (double) height / (double) image.height();
-            double wFactor = (double) width / (double) image.width();
             
             for (int i = 0; i < elList->count(); i++) {
                 ellipse = elList->item(i);
@@ -67,11 +117,45 @@ void PaintLabel::paintEvent(QPaintEvent *ev)
             }
         }
     }
+    else {
+        // Draw standard logo
+        QPixmap stdPix = QPixmap(":/images/femto_logo_bg.png");
+        this->resize(stdPix.width(), stdPix.height());
+        //QRectF target(0, 0, this->width(), this->height());
+        QPainter painter(this);
+        painter.drawPixmap(0, 0, stdPix);
+            
+    }
+}
+
+void PaintLabel :: mouseReleaseEvent(QMouseEvent *ev) {
+    if (drawLine && !image.isNull()) {
+
+        double hFactor = (double) this->height() / (double) image.height();
+        double wFactor = (double) this->width() / (double) image.width();
+
+        if (!p1.isNull() && p2.isNull()) {
+            p2 = QPointF(
+                    ev->x() / wFactor,
+                    ev->y() / hFactor
+                    );
+            emit lineDrawn();
+        }
+        else if (p1.isNull() || (!p1.isNull() && !p2.isNull())) {
+            p1 = QPointF(
+                    ev->x() / wFactor,
+                    ev->y() / hFactor
+                    );
+            p2 = QPointF();
+        }
+        update();
+    }
 }
 
 void PaintLabel :: clear() {
     // set image to null
     image = QImage();
+    shapesDetected = false;
 
     update();
 }
@@ -79,9 +163,10 @@ void PaintLabel :: clear() {
 void PaintLabel::setImage(QImage & img)
 {
     image = img;
+    shapesDetected = false;
 
     // paint the new image
-   adjustSize();
+    adjustSize();
 }
 
 void PaintLabel :: setFitWindow (bool bFit) {
@@ -138,8 +223,8 @@ QImage const * PaintLabel :: getImage () const {
         return &image;
 }
 
-bool PaintLabel :: isImagePresent () const {
-    return (image.isNull())? false : true;
+bool PaintLabel :: isImageNull () const {
+    return image.isNull();
 }
 
 void PaintLabel :: setEllipsesList (QListWidget const * list) {
@@ -147,7 +232,34 @@ void PaintLabel :: setEllipsesList (QListWidget const * list) {
     update();
 }
 
+double PaintLabel :: lineLength() {
+    double l;
+    if (!p1.isNull() && !p2.isNull()) {
+        l = sqrt( (p1.x() - p2.x())*(p1.x() - p2.x()) + (p1.y() - p2.y())*(p1.y() - p2.y()) );
+    }
+    else {
+        l = -1;
+    }
+    return l;
+}
+
 void PaintLabel :: onToggleViewShapes ( bool toggle ) {
     drawShapes = toggle;
+    update();
+}
+
+void PaintLabel :: onShapesDetected () {
+    shapesDetected = true; 
+    update();
+}
+
+
+void PaintLabel :: onToggleDrawLine(bool toggle) { 
+    if (toggle)
+        this->setCursor(Qt::CrossCursor);
+    else
+        this->unsetCursor();
+    drawLine = toggle;
+    update();
 }
 

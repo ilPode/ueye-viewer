@@ -211,7 +211,10 @@ public slots:
     void onFitWindow(bool bFit);
     
     /* Update shape list */
-    void onUpdateList(CvAnalizer const * cvImg);
+    void onUpdateList();
+    
+    /* Updates the units conversion factor */
+    void onUpdateScale();
     
 protected:
     void closeEvent (QCloseEvent * e);
@@ -375,6 +378,10 @@ private:
     /* Image analizer timer */
     DetectionThread * m_pDetThread;
 
+    /* QFileDialog's state */
+    QString loadDialogPath;
+    QString saveDialogPath;
+
 public:
     struct sBufferProps m_BufferProps;
     struct sCameraProps m_CameraProps;
@@ -400,6 +407,5 @@ protected:
   Mainview *mainWindow;
 
 };
-
 
 #endif

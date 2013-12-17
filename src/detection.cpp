@@ -45,11 +45,17 @@ DetectionThread :: ~DetectionThread () {
 
 /* Public methods */
 
+CvAnalizer const * DetectionThread :: getCVImage() const {
+    return cvImg;
+}
+
 void DetectionThread :: setImage (QImage const * image) {
-    cvMutex->lock();
-    cvImg->setImage(image);
-    cvMutex->unlock();
-    detectionDone = SHAPE_NONE;
+    if (! image->isNull()) {
+        cvMutex->lock();
+        cvImg->setImage(image);
+        cvMutex->unlock();
+        detectionDone = SHAPE_NONE;
+    }
 }
 
 void DetectionThread :: setInterval (int interval) {
@@ -71,15 +77,15 @@ void DetectionThread :: setShape (int shape) {
 
 void DetectionThread :: setMinimumRadius (int m) {
     
-    if (m <= 0 && m < 1) 
-        options.minRad = m;
+    if (m <= 0 && m < 1000) 
+        options.minRad = ((double)m)/1000;
     detectionDone = SHAPE_NONE;
 }
 
 void DetectionThread :: setMaximumRadius (int m) {
     
-    if (m > 0 && m <= 1) 
-        options.minRad = m;
+    if (m > 0 && m <= 1000) 
+        options.minRad = ((double)m)/1000;
     detectionDone = SHAPE_NONE;
 }
 
@@ -111,6 +117,18 @@ void DetectionThread :: setAccumulatorFactor (int f) {
     detectionDone = SHAPE_NONE;
 }
 
+void DetectionThread :: setGaussianWidth (int s) {
+    if (s > 0) {
+        options.blurWidth = s;
+    }
+    detectionDone = SHAPE_NONE;
+}
+
+void DetectionThread :: toggleGaussianBlur (bool toggle) {
+    options.gaussianBlur = toggle;
+    detectionDone = SHAPE_NONE;
+}
+
 void DetectionThread :: runDetection (bool run) {
     runDetect = run;
     if (!this->isRunning()) {
@@ -126,6 +144,7 @@ void DetectionThread :: run () {
             cvMutex->unlock();
             detectionDone = (eShape) (detectionDone | options.shape);
             emit detectionFinished(cvImg);
+            emit shapesDetected();
         }
         msleep(sleepInterval);
     }

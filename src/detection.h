@@ -32,6 +32,8 @@ class DetectionThread : public QThread {
         ~DetectionThread();
 
         void run();
+
+        CvAnalizer const * getCVImage() const;
     
         QMutex * cvMutex;
         
@@ -45,10 +47,13 @@ class DetectionThread : public QThread {
         void setAccumulatorThreshold (int th);
         void setMinimumDistance (int d);
         void setAccumulatorFactor (int f);
+        void toggleGaussianBlur (bool toggle);
+        void setGaussianWidth (int s);
         void runDetection(bool run);
 
     signals:
         void detectionFinished(CvAnalizer const * cva);
+        void shapesDetected();
         
     private:
         CvAnalizer * cvImg;

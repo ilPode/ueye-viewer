@@ -17,9 +17,6 @@
 #define DEFAULT_MAX_WIDTH 800
 #define DEFAULT_MAX_HEIGHT 800
 
-#define THRESHOLD_VALUE 150
-#define THRESHOLD_MAX 255
-
 /* Enum of shape types for detection */
 
 enum eShape {
@@ -32,23 +29,28 @@ enum eShape {
 
 struct sDetectionOptions {
     eShape shape;
-    int minRad;
-    int maxRad;
+    double minRad;
+    double maxRad;
     int minDist;
 
     int accumulatorDim;
     int cannyTh;
     int accumulatorTh;
+
+    bool gaussianBlur;
+    int blurWidth;
 };
 
 const sDetectionOptions defaultOptions = {
     SHAPE_NONE,
     0,
-    100,
-    5,
     1,
+    20,
+    2,
+    200,
     100,
-    300
+    false,
+    5
 };
 
 class CvAnalizer : public QObject {
@@ -70,7 +72,7 @@ class CvAnalizer : public QObject {
         int getHeight() const;
         
     protected:
-        bool convertToGrayscale(QImage const * source, IplImage * pDestImage) const;
+        bool convertToGrayscale(QImage const * source, IplImage ** ppDestImage) const;
         //>bool Scale(QImage const * source, IplImage * pDestImage) const;
         int getIPLDepth(QImage::Format format) const; 
         int getChannelsNum(QImage::Format format) const;

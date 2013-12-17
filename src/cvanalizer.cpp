@@ -48,29 +48,19 @@ CvAnalizer :: ~CvAnalizer() {
 
 bool CvAnalizer :: setImage (QImage const * newImage, int mWidth, int mHeight) {
     bool ret;
-    QImage::Format format = newImage->format();
-    if (format == QImage::Format_Indexed8 ||
-            format == QImage::Format_RGB888 ||
-            format == QImage::Format_RGB32 ||
-            format == QImage::Format_ARGB32 ||
-            format == QImage::Format_RGB16 ) {
-        
-        if (newImage->width() > mWidth || newImage->height() > mHeight) {
-            QImage image = newImage->scaled(mWidth, mHeight, Qt::KeepAspectRatio);
-            cv_image = cvCreateImage(cvSize(image.width(), image.height()), IPL_DEPTH_8U, 1);
-            ret = convertToGrayscale(&image, cv_image);
-        }
-        else {
-            cv_image = cvCreateImage(cvSize(newImage->width(), newImage->height()), IPL_DEPTH_8U, 1);
-            ret = convertToGrayscale(newImage, cv_image);
-        }
-        scalingFactor = (double) cv_image->width / (double) newImage->width();
+    QImage * pImage;
+    if (newImage->width() > mWidth || newImage->height() > mHeight) {
+        pImage = new QImage(newImage->scaled(mWidth, mHeight, Qt::KeepAspectRatio));
     }
     else {
-
-        qWarning() << "Image format not supported: " << format << " (in function: CvAnalizer::setImage)";
-        ret = false;
+        pImage = new QImage(*newImage);
     }
+
+    ret = convertToGrayscale(pImage, &cv_image);
+    if (ret) {
+        scalingFactor = (double) cv_image->width / (double) newImage->width();
+    }
+    delete pImage;
     return ret;
 }
 
@@ -88,35 +78,27 @@ void CvAnalizer :: findShapes (sDetectionOptions opts) {
 
     if ((opts.shape & SHAPE_CIRCLE) != 0) {
         //cvClearMemStorage(cv_memCircles);
-        cvSaveImage("image_original.png", cv_image); 
-        cvSmooth(cv_image, cv_image, CV_GAUSSIAN, 5, 5 );
-        cvSaveImage("image_smooth.png", cv_image); 
-        cvThreshold(cv_image, cv_image, THRESHOLD_VALUE, THRESHOLD_MAX, CV_THRESH_BINARY_INV);
-        cvSaveImage("image_thresh.png", cv_image); 
+        IplImage *tmpImg = cvCloneImage(cv_image);
+        if (opts.gaussianBlur) {
+            cvSmooth(tmpImg, tmpImg, CV_GAUSSIAN, opts.blurWidth, opts.blurWidth );
+        }
+        //cvSaveImage("image_smooth.png", cv_image); 
+        //cvThreshold(cv_image, cv_image, THRESHOLD_VALUE, THRESHOLD_MAX, CV_THRESH_BINARY_INV);
         cv_seqCircles = cvHoughCircles(
-                cv_image,
+                tmpImg,
                 cv_memCircles, 
                 CV_HOUGH_GRADIENT,
                 opts.accumulatorDim,    // Accumulator resolution ratio
                 opts.minDist,           // Min distance between two centers
                 opts.cannyTh,           // Canny edge threshold
                 opts.accumulatorTh,     // Accumulator threshold
-                opts.minRad * (cv_image->width > cv_image->height ? cv_image->height : cv_image->width), // Min radius
-                opts.maxRad * (cv_image->width > cv_image->height ? cv_image->height : cv_image->width) // Max radius
+                (int) (opts.minRad * MIN(cv_image->width, cv_image->height)), // Min radius
+                (int) (opts.maxRad * MIN(cv_image->width, cv_image->height)) //Max radius
                 );
-        for( int i = 0; i < cv_seqCircles->total; i++ ) {
-            float* p = (float*) cvGetSeqElem(cv_seqCircles, i);
-            CvPoint pt = cvPoint(cvRound(p[0]), cvRound(p[1]));
-            cvCircle(cv_image, pt, cvRound(p[2]), CV_RGB(0x88,0x88,0x88));
-        }
-        cvSaveImage("image_final.png", cv_image); 
+        cvReleaseImage(&tmpImg);
+        //cvSaveImage("image_final.png", cv_image); 
     }
 }
-
-/*
-void Image :: findEllipses(...) {
-}*/
-
 
 int CvAnalizer :: getCirclesNum() const {
     if (cv_seqCircles) 
@@ -151,54 +133,77 @@ int CvAnalizer :: getHeight() const {
 
 /* Protected Methods */
 
-bool CvAnalizer :: convertToGrayscale (QImage const * source, IplImage * pDestImage) const {
+bool CvAnalizer :: convertToGrayscale (QImage const * source, IplImage ** ppDestImage) const {
 
     bool ret = true;
     if (! source->isNull()) {
 
-        int depth = getIPLDepth(source->format());
-        int chNum = getChannelsNum(source->format());
+        int depth;
+        int chNum;
 
-        if (depth !=0 && chNum != 0) {
-            IplImage * srcImage = cvCreateImageHeader(cvSize(source->width(), source->height()), depth, chNum);
-            cvSetData(srcImage, (void *)source->bits(), source->bytesPerLine());
+        IplImage * destImage = cvCreateImage(cvSize(source->width(), source->height()), IPL_DEPTH_8U, 1);
+        IplImage * srcImage;
+
+        QImage::Format format = source->format();
+        switch(format) {
+            case QImage::Format_Indexed8:
+                if (source->isGrayscale()) {
+                    depth = getIPLDepth(source->format());
+                    chNum = getChannelsNum(source->format());
+                    srcImage = cvCreateImageHeader(cvSize(source->width(), source->height()), depth, chNum);
+
+                    cvSetData(srcImage, (void *)source->bits(), source->bytesPerLine());
+                    cvCopy(srcImage, destImage);
+                }
+                else {
+                    QImage rgbSource = source->convertToFormat(QImage::Format_RGB888);
+                    depth = getIPLDepth(rgbSource.format());
+                    chNum = getChannelsNum(rgbSource.format());
+                    srcImage = cvCreateImageHeader(cvSize(rgbSource.width(), rgbSource.height()), depth, chNum);
+
+                    cvSetData(srcImage, (void *)rgbSource.bits(), rgbSource.bytesPerLine());
+                    cvCvtColor(srcImage, destImage, CV_RGB2GRAY);
+                }
+                break;
             
-            QImage::Format format = source->format();
-            switch(format) {
-                case QImage::Format_Indexed8:
-                    cvCopy(srcImage, pDestImage);
-                    break;
-                
-                case QImage::Format_RGB888:
-                    cvCvtColor(srcImage, pDestImage, CV_RGB2GRAY);
-                    break;
-                
-                case QImage::Format_RGB32:
-                case QImage::Format_ARGB32: {
-                    IplImage * tempImage = cvCreateImage(cvSize(source->width(), source->height()), IPL_DEPTH_8U, 3);
-                    cvCvtColor(srcImage, tempImage, CV_RGBA2RGB);
-                    cvCvtColor(tempImage, pDestImage, CV_RGB2GRAY);
-                    cvReleaseImage(&tempImage);
-                    break;
-                }
-                case QImage::Format_RGB16: {
-                    IplImage * tempImage = cvCreateImage(cvSize(source->width(), source->height()), IPL_DEPTH_16U, 1);
-                    cvCvtColor(srcImage, tempImage, CV_BGR5652GRAY);
-                    cvConvertScale(tempImage, pDestImage);
-                    cvReleaseImage(&tempImage);
-                    break;
-                }
-                default:
-                    qWarning() << "Image format not supported: " << format << "(in function: CvAnalizer::convertToGrayscale)";
-                    ret = false;
-                }
+            case QImage::Format_RGB32:
+            case QImage::Format_ARGB32: 
+            case QImage::Format_RGB888:
+                depth = getIPLDepth(source->format());
+                chNum = getChannelsNum(source->format());
+                srcImage = cvCreateImageHeader(cvSize(source->width(), source->height()), depth, chNum);
+                cvSetData(srcImage, (void *)source->bits(), source->bytesPerLine());
+                cvCvtColor(srcImage, destImage, CV_RGB2GRAY);
+                break;
 
-            cvReleaseImageHeader(&srcImage);
-        }
+           /* This is not needed because cvCvtColor takes care of the additional channel
+            case QImage::Format_RGB32:
+            case QImage::Format_ARGB32: {
+                qDebug() << "Format: RGB32 o ARGB32";
+                IplImage * tempImage = cvCreateImage(cvSize(source->width(), source->height()), IPL_DEPTH_8U, 3);
+                cvCvtColor(srcImage, tempImage, CV_RGBA2RGB);
+                cvCvtColor(tempImage, pDestImage, CV_RGB2GRAY);
+                cvReleaseImage(&tempImage);
+                break;
+            }*/
+            case QImage::Format_RGB16: {
+                IplImage * tempImage = cvCreateImage(cvSize(source->width(), source->height()), IPL_DEPTH_16U, 1);
+                cvSetData(srcImage, (void *)source->bits(), source->bytesPerLine());
+                cvCvtColor(srcImage, tempImage, CV_BGR5652GRAY);
+                cvConvertScale(tempImage, destImage);
+                cvReleaseImage(&tempImage);
+                break;
+            }
 
-        else {
-            qDebug() << "Invalid depth or channels number (in function CvAnalizer::convertToGrayscale)";
-            ret = false;
+            default:
+                qWarning() << "Image format not supported: " << format << "(in function: CvAnalizer::convertToGrayscale)";
+                cvReleaseImageHeader(&destImage);
+                ret = false;
+            }
+
+        cvReleaseImageHeader(&srcImage);
+        if (ret) {
+            *ppDestImage = destImage;
         }
     }
     else {

@@ -48,14 +48,18 @@ public:
     /* Get pointer to QImage */
     QImage const * getImage() const;
 
-    /* True if the QImage is not null */
-    bool isImagePresent() const;
+    /* True if the QImage is null */
+    bool isImageNull() const;
+
+    /* Return length between p1 and p2 (-1 if one is null) */
+    double lineLength();
 
 public slots:
     
-    /* Toggle draws shapes on the image */
+    /* Toggle drawsShapes and shapeDetected variables */
     void onToggleViewShapes(bool toggle);
-    
+    void onShapesDetected();
+
     /* Clears the previous paintings */
     void clear();
 
@@ -64,9 +68,16 @@ public slots:
     void onZoomOut();
     void onZoomIn();
     void setFitWindow(bool bFit);
+    
+    /* Draw line */
+    void onToggleDrawLine(bool toggle); 
 
 protected:
     void paintEvent(QPaintEvent *ev);
+    void mouseReleaseEvent(QMouseEvent *ev);
+
+signals:
+    void lineDrawn();
 
 private:
 
@@ -76,6 +87,10 @@ private:
 
     QListWidget const * elList;
     bool drawShapes;
+    bool shapesDetected;
+
+    bool drawLine;
+    QPointF p1, p2;
 };
 
 #endif

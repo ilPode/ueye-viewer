@@ -33,7 +33,6 @@ Mainview :: Mainview (QWidget *parent, QString strStartID) :
     m_imageLabel->setBackgroundRole( QPalette::Foreground ); 
     m_imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     m_imageLabel->setScaledContents(true);
-    m_imageLabel->setPixmap(QPixmap(":/images/femto_logo_bg.png"));
     //m_imageLabel->setAlignment(Qt::AlignCenter);
 
     m_scrollArea = new QScrollArea;
@@ -176,25 +175,46 @@ Mainview :: Mainview (QWidget *parent, QString strStartID) :
 
     m_pDetThread = new DetectionThread(this);
     m_pDetThread->setInterval(spinRefresh->value());
-    m_pDetThread->setMinimumRadius(spinMinRad->value());
+    m_pDetThread->setMinimumRadius(sliderMinRad->value());
     //m_pDetThread->setShape(comboShapeSel->currentIndex());
     m_pDetThread->setShape(1);
-    connect(m_pDetThread, SIGNAL(detectionFinished(CvAnalizer const *)), this, SLOT(onUpdateList(CvAnalizer const *)));
+    connect(m_pDetThread, SIGNAL(detectionFinished(CvAnalizer const *)), this, SLOT(onUpdateList()));
+    connect(m_pDetThread, SIGNAL(shapesDetected()), m_imageLabel, SLOT(onShapesDetected()));
 
     connect(spinRefresh, SIGNAL(valueChanged(int)), m_pDetThread, SLOT(setInterval(int)));
-    connect(spinMinRad, SIGNAL(valueChanged(int)), m_pDetThread, SLOT(setMinimumRadius(int)));
-    connect(spinMaxRad, SIGNAL(valueChanged(int)), m_pDetThread, SLOT(setMaximumRadius(int)));
-    connect(spinMinDist, SIGNAL(valueChanged(int)), m_pDetThread, SLOT(setMinimumDistance(int)));
+    connect(sliderMinRad, SIGNAL(valueChanged(int)), m_pDetThread, SLOT(setMinimumRadius(int)));
+    connect(sliderMaxRad, SIGNAL(valueChanged(int)), m_pDetThread, SLOT(setMaximumRadius(int)));
+    connect(sliderMinDistScale, SIGNAL(valueChanged(int)), m_pDetThread, SLOT(setMinimumDistance(int)));
     connect(spinCannyTh, SIGNAL(valueChanged(int)), m_pDetThread, SLOT(setCannyThreshold(int)));
     connect(spinAccTh, SIGNAL(valueChanged(int)), m_pDetThread, SLOT(setAccumulatorThreshold(int)));
     connect(spinAccDim, SIGNAL(valueChanged(int)), m_pDetThread, SLOT(setAccumulatorFactor(int)));
+    connect(spinGaussian, SIGNAL(valueChanged(int)), m_pDetThread, SLOT(setGaussianWidth(int)));
+    connect(cboxGaussian, SIGNAL(toggled(bool)), m_pDetThread, SLOT(toggleGaussianBlur(bool)));
+
+    connect(spinPixDim, SIGNAL(valueChanged(double)), this, SLOT(onUpdateList()));
+    connect(comboPixDim, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateList()));
+    connect(spinPixDim, SIGNAL(valueChanged(double)), this, SLOT(onUpdateScale()));
+    connect(comboPixDim, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateScale()));
+    connect(sliderMinRad, SIGNAL(valueChanged(int)), this, SLOT(onUpdateScale()));
+    connect(sliderMaxRad, SIGNAL(valueChanged(int)), this, SLOT(onUpdateScale()));
+    connect(sliderMinDistScale, SIGNAL(valueChanged(int)), this, SLOT(onUpdateScale()));
     
     connect(cboxShow, SIGNAL(toggled(bool)), m_imageLabel, SLOT(onToggleViewShapes(bool)));
     connect(btnDetect, SIGNAL(toggled(bool)), m_pDetThread, SLOT(runDetection(bool)));
     
     QAction * pActionToggleDetectDock = dockDetect->toggleViewAction();
     pActionToggleDetectDock->setIcon(QIcon(QPixmap(":/icons/find-shapes.png")));
+    pActionToggleDetectDock->setToolTip(tr("Find circles"));
     toolBar_display->addAction(pActionToggleDetectDock);
+
+    connect(m_imageLabel, SIGNAL(lineDrawn()), this, SLOT(onUpdateScale()));
+    connect(btnDrawLine, SIGNAL(toggled(bool)), m_imageLabel, SLOT(onToggleDrawLine(bool)));
+    QAction * pActionToggleMeasureDock = dockMeasure->toggleViewAction();
+    pActionToggleMeasureDock->setIcon(QIcon(QPixmap(":/icons/measure-tool.png")));
+    pActionToggleMeasureDock->setToolTip(tr("Ruler"));
+    toolBar_display->addAction(pActionToggleMeasureDock);
+
+
 
     // read window state
     readSettings();
@@ -270,6 +290,20 @@ void Mainview :: writeSettings ()
     settings.beginGroup("mainWindow");
     settings.setValue("geometry", saveGeometry());
     settings.setValue("state", saveState());
+    settings.setValue("load_dialog", loadDialogPath);
+    settings.setValue("save_dialog", saveDialogPath);
+    settings.endGroup();
+
+    settings.beginGroup("detection");
+    settings.setValue("refesh_rate", spinRefresh->value());
+    settings.setValue("min_rad", sliderMinRad->value());
+    settings.setValue("max_rad", sliderMaxRad->value());
+    settings.setValue("pixel_dim",spinPixDim->value());
+    settings.setValue("min_dist", sliderMinDistScale->value());
+    settings.setValue("accumulator_th", spinAccTh->value());
+    settings.setValue("accumulator_fact", spinAccDim->value());
+    settings.setValue("gaussian_width", spinGaussian->value());
+    settings.setValue("gaussian_blur", cboxGaussian->isChecked());
     settings.endGroup();
 }
 
@@ -281,6 +315,20 @@ void Mainview :: readSettings (  )
     settings.beginGroup("mainWindow");
     restoreGeometry(settings.value("geometry").toByteArray());
     restoreState(settings.value("state").toByteArray());
+    loadDialogPath = settings.value("load_dialog").toString();
+    saveDialogPath = settings.value("save_dialog").toString();
+    settings.endGroup();
+
+    settings.beginGroup("detection");
+    spinRefresh->setValue(settings.value("refesh_rate", 100).toInt()); 
+    sliderMinRad->setValue(settings.value("min_rad", 0).toInt());
+    sliderMaxRad->setValue(settings.value("max_rad", 1000).toInt()); 
+    spinPixDim->setValue(settings.value("pixel_dim", 1.0).toDouble());
+    sliderMinDistScale->setValue(settings.value("min_dist", 10).toInt()); 
+    spinAccTh->setValue(settings.value("accumulator_th", 200).toInt());
+    spinAccDim->setValue(settings.value("accumulator_fact", 100).toInt());
+    spinGaussian->setValue(settings.value("gaussian_width", 5).toInt());
+    cboxGaussian->setChecked(settings.value("gaussian_blur", false).toBool());
     settings.endGroup();
 }
 
@@ -414,6 +462,7 @@ void Mainview :: DrawImage( char *pBuffer ) {
     
     m_imageLabel->setImage(image);
     m_pDetThread->setImage(m_imageLabel->getImage());
+    onUpdateScale();
 
 
     ret |= is_UnlockSeqBuf (m_hCamera, nNum, pBuffer);
@@ -423,6 +472,8 @@ void Mainview :: DrawImage( QImage & image ) {
 
     m_imageLabel->setImage(image);
     m_pDetThread->setImage(m_imageLabel->getImage());
+    onUpdateScale();
+    UpdateControls();
 }
 
 void Mainview :: adjustScrollBar ( QScrollBar *scrollBar, double factor )
@@ -877,37 +928,43 @@ void Mainview :: onSaveImage ()
 {
     if (m_hCamera)
     {
-        QFileDialog* fd = new QFileDialog (this, "Save the current image" "/home", "image.bmp");
-        fd->setAcceptMode(QFileDialog::AcceptSave);
+        //>cambia la cartella di base, nei sistemi win non è /home
+        QString basePath = "/home";
+        if (QDir(saveDialogPath).exists()) {
+            basePath = saveDialogPath;
+        }
+        QFileDialog fd(this, tr("Save the current image"), basePath);
+        fd.setAcceptMode(QFileDialog::AcceptSave);
         //fd->setMode (QFileDialog::AnyFile);
         QStringList namefilters;
         namefilters << "Bitmap images (*.bmp)";
         namefilters << "JPEG images (*.jpg)";
         namefilters << "PNG images (*.png)";
 
-        fd->setNameFilters(namefilters);
-        fd->selectNameFilter("Bitmap images (*.bmp)");
+        fd.setNameFilters(namefilters);
+        fd.selectNameFilter("Bitmap images (*.bmp)");
 
         QString fileName;
-        if (fd->exec () == QDialog::Accepted)
+        if (fd.exec () == QDialog::Accepted)
         {
-            fileName = fd->selectedFiles().first();
+            fileName = fd.selectedFiles().first();
         }
 
         INT ret = IS_SUCCESS;
         if (!fileName.isEmpty ())
         {
+            saveDialogPath = QFileInfo(fileName).absolutePath();
             // set Bitmap params as default
             int fileformat = IS_IMG_BMP;
             int fileparam = 0; // !only for IS_IMG_JPEG
-            QString selnamefilter = fd->selectedNameFilter();
+            QString selnamefilter = fd.selectedNameFilter();
             qDebug("selected name filter : %s", selnamefilter.toStdString().c_str());
-            if (fd->selectedNameFilter() == "JPEG images (*.jpg)")
+            if (fd.selectedNameFilter() == "JPEG images (*.jpg)")
             {
                 fileformat = IS_IMG_JPG;
                 fileparam = 0; // JPEG quality 1-100%
             }
-            else if (fd->selectedNameFilter() == "PNG images (*.png)")
+            else if (fd.selectedNameFilter() == "PNG images (*.png)")
             {
                 fileformat = IS_IMG_PNG;
             }
@@ -939,11 +996,16 @@ void Mainview :: onSaveImage ()
 
 void Mainview :: onLoadImage () {
     
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                    "/home",
-                                                    tr("Images (*.png *.bmp *.jpg)"));
     //>cambia la cartella di base, nei sistemi win non è /home
+    QString basePath = "/home";
+    if (QDir(loadDialogPath).exists()) {
+        basePath = loadDialogPath;
+    }
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                    basePath,
+                                                    tr("Images (*.png *.bmp *.jpg)"));
     if (!fileName.isEmpty()) {
+        loadDialogPath = QFileInfo(fileName).absolutePath();
         QImage image(fileName);
         if (!image.isNull()) {
             DrawImage(image);
@@ -956,13 +1018,17 @@ void Mainview :: onLoadImage () {
 
 void Mainview :: onLoadImageCam ()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                    "/home",
-                                                    tr("Images (*.png *.bmp)"));
     //>cambia la cartella di base, nei sistemi win non è /home
-
+    QString basePath = "/home";
+    if (QDir(loadDialogPath).exists()) {
+        basePath = loadDialogPath;
+    }
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                    basePath,
+                                                    tr("Images (*.png *.bmp *.jpg)"));
     if (!fileName.isEmpty())
     {
+        loadDialogPath = QFileInfo(fileName).absolutePath();
         // stop live video
         if (m_bLive)
         {
@@ -1237,30 +1303,64 @@ void Mainview :: onFitWindow (bool bFit) {
     UpdateControls();
 }
 
-void Mainview :: onUpdateList (CvAnalizer const * cvImage) {
+void Mainview :: onUpdateList () {
     
     listEllipses->clear();
+    listDist->clear();
     //> un minimo di tracking invece di un clear violento non ci starebbe male
     
     //> if SHAPE_CIRCLE
     m_pDetThread->cvMutex->lock();
-    float c[3];
+    CvAnalizer const * cvImage = m_pDetThread->getCVImage();
+    float c[3], d[3];
+    float dist;
     int CNum = cvImage->getCirclesNum();
+
     if (CNum > 0) {
-        for( int i = 0; i < CNum ; i++ ) {
+        QListWidgetItem *lCircle, *distItem;
+        double pixDim = spinPixDim->value();
+        //QTableWidgetItem *tCircle1, *tCircle2;
+        //tableCircles->setRowCount(CNum+1);
+        //tableCircles->setColumnCount(CNum+1);
+
+        for(int i = 0; i < CNum; i++) {
             cvImage->getCircle(i, c);
-            QListWidgetItem * circle = new QListWidgetItem();
-            circle->setData(Qt::UserRole + 1, QRectF(c[0] - c[2], c[1] - c[2], 2 * c[2], 2 * c[2]));
-            circle->setData(Qt::DecorationRole, QColor((Qt::GlobalColor) (Qt::red + i % 19))); 
-            circle->setData(Qt::DisplayRole, QString("C:(%1,%2) R = %3)").arg((int) c[0]).arg((int) c[1]).arg(c[2])); 
-            circle->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-            listEllipses->addItem(circle);
+
+            QRectF cRect(c[0] - c[2], c[1] - c[2], 2 * c[2], 2 * c[2]);
+            QColor cColor((Qt::GlobalColor) (Qt::red + i % 19));
+
+            lCircle = new QListWidgetItem(QString("Radius: %1 %2").arg(c[2]*pixDim, 0, 'f', 2).arg(comboPixDim->currentText()), listEllipses);
+            lCircle->setData(Qt::UserRole + 1, cRect);
+            lCircle->setData(Qt::DecorationRole, cColor); 
+            lCircle->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+            listEllipses->addItem(lCircle);
+
+            for(int j = i+1; j < CNum; j++) {
+                cvImage->getCircle(j, d);
+
+                QColor dColor((Qt::GlobalColor) (Qt::red + j % 19));
+                QPixmap icoPix(64, 32);
+                QPainter icoPainter(&icoPix);
+                icoPainter.fillRect(0, 0, 64, 32, Qt::white);
+                icoPainter.setBrush(QBrush(cColor));
+                icoPainter.drawEllipse(0, 0, 30, 30);
+                icoPainter.setBrush(QBrush(dColor));
+                icoPainter.drawEllipse(33, 0, 30, 30);
+                icoPainter.setPen(QPen(QBrush(Qt::black),2));
+                icoPainter.drawLine(15, 16, 49, 16);
+                QIcon distIcon(icoPix);
+
+                dist = sqrt((c[0]-d[0])*(c[0]-d[0]) + (c[1]-d[1])*(c[1]-d[1]))*pixDim;
+                QString distString(QString("%1 %2").arg(dist, 0, 'f', 2).arg(comboPixDim->currentText())); 
+                distItem = new QListWidgetItem(distIcon, distString, listDist);
+                distItem->setData(Qt::UserRole + 1, dist);
+            }
         }
-        m_imageLabel->update();
     }
 
     else {
         listEllipses->addItem(new QListWidgetItem("No circles found"));
+        listDist->addItem(new QListWidgetItem("No circles found"));
     }
 
     m_pDetThread->cvMutex->unlock();
@@ -1391,22 +1491,37 @@ void Mainview :: UpdateControls ()
 
     actionLimitDisplayRate->setEnabled(m_hCamera != IS_INVALID_HIDS);
 
-    actionView_fit->setEnabled(m_imageLabel->isImagePresent());
-    actionOriginal_size->setEnabled(m_imageLabel->isImagePresent() && !actionView_fit->isChecked());
-    actionZoom_out->setEnabled(m_imageLabel->isImagePresent() && !actionView_fit->isChecked());
-    actionZoom_in->setEnabled(m_imageLabel->isImagePresent() && !actionView_fit->isChecked());
+    actionView_fit->setEnabled(!m_imageLabel->isImageNull());
+    actionOriginal_size->setEnabled(!m_imageLabel->isImageNull() && !actionView_fit->isChecked());
+    actionZoom_out->setEnabled(!m_imageLabel->isImageNull() && !actionView_fit->isChecked());
+    actionZoom_in->setEnabled(!m_imageLabel->isImageNull() && !actionView_fit->isChecked());
 
-    /*if (m_hCamera == IS_INVALID_HIDS)
-    {
-        //m_imageLabel->setScaledContents(false);
-        //m_imageLabel->setPixmap(QPixmap(":/new/prefix1/images/ueye_background_logo.png"));
-        //m_imageLabel->setAlignment(Qt::AlignCenter);
-        //m_scrollArea->setWidgetResizable(true);
+    btnDetect->setEnabled(!m_imageLabel->isImageNull());
+    btnDrawLine->setEnabled(!m_imageLabel->isImageNull());
+}
+
+void Mainview :: onUpdateScale () {
+    if (m_imageLabel->isImageNull()) {
+        labelMinRadScale->setText("-");
+        labelMaxRadScale->setText("-");
+        labelMinDistScale->setText("-");
+        labelMeasure->setText("-");
     }
-    else
-    {
-        m_imageLabel->setScaledContents(true);
-    }*/ //> tocchera toglielo
+    else {
+        QSize imgSize = m_imageLabel->getImage()->size();
+        int imgPix = MAX(imgSize.width(), imgSize.height());
+        labelMinRadScale->setText(QString("%1 %2").arg((imgPix * sliderMinRad->value() * spinPixDim->value())/1000, 0, 'f', 2).arg(comboPixDim->currentText()));
+        labelMaxRadScale->setText(QString("%1 %2").arg((imgPix * sliderMaxRad->value() * spinPixDim->value())/1000, 0, 'f', 2).arg(comboPixDim->currentText()));
+        labelMinDistScale->setText(QString("%1 %2").arg(sliderMinDistScale->value() * spinPixDim->value(), 0, 'f', 2).arg(comboPixDim->currentText()));
+        
+        double length = m_imageLabel->lineLength();
+        if (length == -1) {
+            labelMeasure->setText("-");
+        }
+        else {
+            labelMeasure->setText(QString("%1 %2").arg(length * spinPixDim->value(), 0, 'f', 2).arg(comboPixDim->currentText()));
+        }
+    }
 }
 
 void Mainview :: ProcessFrame () {
