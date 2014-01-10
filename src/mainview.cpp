@@ -13,7 +13,7 @@
 #include <QDebug>
 #include <QSettings>
 #include <wchar.h>
-#include <sys/time.h>
+#include <time.h>
 
 #define IMAGEINFO_TIMEOUT 500 //ms
 

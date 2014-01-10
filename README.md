@@ -4,6 +4,3 @@ Dependencies:
 - Ueye library
 - Qt library and build tools 
 - OpenCV library
-
-To Compile:
-- qmake and make

@@ -49,6 +49,10 @@
 #include "detection.h"
 #include "paintlabel.h"
 
+#ifndef __LINUX__
+	#define snprintf sprintf_s
+#endif
+
 class properties;
 
 class WorkerThread;
