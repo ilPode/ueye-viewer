@@ -21,7 +21,7 @@ If you use [minGW](http://mingw.org/), then the procedure is the same on windows
 
 If you use Visual Studio you can use the command `qmake -tp vcapp` to generate a Project file.
 
-###Dependens on:
+###Depends on:
 - [IDS Ueye](http://en.ids-imaging.com/download-ueye.html)
 - [Qt4](http://qt-project.org)
 - [OpenCV](http://opencv.org/)
